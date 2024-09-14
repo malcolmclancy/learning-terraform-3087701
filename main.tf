@@ -79,7 +79,7 @@ module "blog_alb" {
       protocol         = "HTTP"
       port             = 80
       target_type      = "instance"
-      target_group_key = 0
+      target_id        = (element(module.blog_alb,1)).id
     }
   }
 
