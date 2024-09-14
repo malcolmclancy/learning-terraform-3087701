@@ -66,16 +66,19 @@ module "blog_alb" {
     ex-http = {
       port     = 80
       protocol = "HTTP"
+
+      forward = {
+        target_group_key = "ex-blog-instance"
+      }
     }
   }
   
   target_groups = {
-    blog-instance = {
+    ex-blog-instance = {
       name_prefix      = "blog-"
       protocol         = "HTTP"
       port             = 80
       target_type      = "instance"
-      target_id        = module.blog_autoscaling.instance_id
     }
   }
 
