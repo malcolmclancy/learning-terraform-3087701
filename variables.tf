@@ -4,7 +4,7 @@ variable "instance_type" {
 }
 
 variable "ami_filter" {
-  description = Name filer and owner for AMI
+  description = "Name filer and owner for AMI"
 
   type = object ({
     name  = string
