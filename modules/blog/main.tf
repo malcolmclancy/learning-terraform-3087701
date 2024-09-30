@@ -71,7 +71,7 @@ module "blog_alb" {
     }
   }
 
-  http_tcp_listeners = {
+  listeners = {
     ex-instance = {
       port               = 80
       protocol           = "HTTP"
