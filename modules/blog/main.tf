@@ -60,22 +60,22 @@ module "blog_alb" {
   security_groups    = [module.blog_sg.security_group_id]
 
   target_groups = {
-    ex-http = {
+    ex-instance = {
       name_prefix      = "${var.environment.name}-"
       backend_protocol = "HTTP"
       backend_port     = 80
       target_type      = "instance"
-      forward = {
-        target_group_key = "ex-instance"
-      }
     }
   }
 
   listeners = {
-    ex-instance = {
+    ex-http = {
       port               = 80
       protocol           = "HTTP"
       target_group_index = 0
+      forward = {
+        target_group_key = "ex-instance"
+      }
     }
   }
 
