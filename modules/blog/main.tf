@@ -42,7 +42,7 @@ module "blog_autoscaling" {
   min_size            = var.asg_min_size
   max_size            = var.asg_max_size
   vpc_zone_identifier = module.blog_vpc.public_subnets
-  target_group_arns   = module.blog_alb.arn
+  target_group_arns   = module.blog_alb.target_group_arns
   security_groups     = [module.blog_sg.security_group_id]
   instance_type       = var.instance_type
   image_id            = data.aws_ami.app_ami.id
@@ -50,6 +50,7 @@ module "blog_autoscaling" {
 
 module "blog_alb" {
   source  = "terraform-aws-modules/alb/aws"
+  version = "~> 6.0"
 
   name = "${var.environment.name}-blog-alb"
 
@@ -59,25 +60,22 @@ module "blog_alb" {
   subnets            = module.blog_vpc.public_subnets
   security_groups    = [module.blog_sg.security_group_id]
 
-  listeners = {
-    ex-http = {
+  target_groups = [
+    {
+      name_prefix      = "${var.environment.name}-"
+      backend_protocol = "HTTP"
+      backend_port     = 80
+      target_type      = "instance"
+    }
+  ]
+
+  http_tcp_listeners = [
+    {
       port               = 80
       protocol           = "HTTP"
-      forward = {
-        target_group_key = "ex-instance"
-      }
+      target_group_index = 0
     }
-  }
-
-  target_groups = {
-    ex-instance = {
-      name_prefix       = "${var.environment.name}-"
-      backend_protocol  = "HTTP"
-      backend_port      = 80
-      target_type       = "instance"
-      create_attachment = false
-    }
-  }
+  ]
 
   tags = {
     Environment = var.environment.name
@@ -96,4 +94,3 @@ module "blog_sg" {
   egress_rules = ["all-all"]
   egress_cidr_blocks = ["0.0.0.0/0"]
 }
-
