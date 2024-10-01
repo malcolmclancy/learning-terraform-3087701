@@ -59,15 +59,6 @@ module "blog_alb" {
   subnets            = module.blog_vpc.public_subnets
   security_groups    = [module.blog_sg.security_group_id]
 
-  target_groups = {
-    ex-instance = {
-      name_prefix      = "${var.environment.name}-"
-      protocol         = "HTTP"
-      port             = 80
-      target_type      = "instance"
-    }
-  }
-
   listeners = {
     ex-http = {
       port               = 80
@@ -75,6 +66,15 @@ module "blog_alb" {
       forward = {
         target_group_key = "ex-instance"
       }
+    }
+  }
+
+  target_groups = {
+    ex-instance = {
+      name_prefix      = "${var.environment.name}-"
+      protocol         = "HTTP"
+      port             = 80
+      target_type      = "instance"
     }
   }
 
