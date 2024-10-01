@@ -71,11 +71,11 @@ module "blog_alb" {
 
   target_groups = {
     ex-instance = {
-      name_prefix      = "${var.environment.name}-"
-      protocol         = "HTTP"
-      port             = 80
-      target_type      = "instance"
-      target_id        =  module.blog_vpc.default_vpc_id
+      name_prefix       = "${var.environment.name}-"
+      backend_protocol  = "HTTP"
+      backend_port      = 80
+      target_type       = "instance"
+      create_attachment = false
     }
   }
 
